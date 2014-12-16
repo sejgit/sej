@@ -1,0 +1,24 @@
+/*
+ christmas.ino
+ written dec2014 to control string of lights using a bjt
+*/
+
+int lights = 12;  //the christmas lights
+int pot = 7; //the speed potentiometer
+int speed = 1000; //start delay at 1s
+boolean mode = false;
+
+
+void setup()
+{
+  pinMode(lights, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  digitalWrite(lights, mode);
+  Serial.println(mode);
+  mode = !mode;
+  delay(speed);
+}
