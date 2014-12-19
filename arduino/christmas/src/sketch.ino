@@ -10,6 +10,8 @@ const int LED2 = 10; //green led
 const int LIGHTS = 12;  //the christmas lights
 const int BAUD = 9600; //serial port baud
 const int INDICATOR = 13; //calibration indicator
+const int SCALEMIN = 50;
+const int SCALEMAX = 4000;
 
 int brightness = 0; //starting brightness
 int fadeAmount = 1; //how many points to fade the LEDs by
@@ -21,7 +23,7 @@ unsigned long prevMillisLED = 0; //will store last time LED was updated
 unsigned long prevMillisLight = 0; //will store last time Light was updated
 unsigned long curMillis = 0;
 unsigned long lightSpeed = 1000; //interval at which to blink (milliseconds)
-unsigned long ledSpeed = 20;
+unsigned long ledSpeed = 10;
 
 int sensorMin = 1023; //minimum sensor value
 int sensorMax = 10; //maximum sensor value
@@ -49,8 +51,10 @@ void loop()
   if (onoffSW) {
     digitalWrite(INDICATOR, LOW); //signal the end of the calibration period
     sensorValue = analogRead(DELAYPOT); //read the sensor
-    lightSpeed = map(sensorValue, sensorMin, sensorMax, 0, 5000);   //apply the calibration to the sensor reading
-    lightSpeed = constrain(lightSpeed, 0, 5000); //in case the sensor value is outside the range seen during calibration
+    lightSpeed = map(sensorValue, sensorMin, sensorMax, SCALEMIN, SCALEMAX);   //apply the calibration to the sensor reading
+    lightSpeed = constrain(lightSpeed, SCALEMIN, SCALEMAX); //in case the sensor value is outside the range during calibration
+
+    ledSpeed = lightSpeed / 10;
 
     if (curMillis - prevMillisLED > ledSpeed) {
       prevMillisLED = curMillis;   
@@ -75,7 +79,7 @@ void loop()
       Serial.print("\t");
       Serial.print(sensorMax);
       Serial.print("\t");
-      Serial.println(sensorValue);
+      Serial.print(sensorValue);
       Serial.print("\t");
       Serial.println(lightSpeed);
     }
