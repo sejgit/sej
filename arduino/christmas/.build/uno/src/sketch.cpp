@@ -41,6 +41,7 @@ void setup()
   pinMode(LED1, OUTPUT);
   pinMode(LED2, OUTPUT);
   pinMode(INDICATOR, OUTPUT);
+  pinMode(A0, INPUT);
 
   Serial.begin(BAUD);
 }
