@@ -1,3 +1,9 @@
+#include <Arduino.h>
+
+void setup();
+void loop();
+void calibrate();
+#line 1 "src/sketch.ino"
 /*
  christmas.ino
  written dec2014 to control string of lights using a bjt
