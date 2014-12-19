@@ -49,9 +49,8 @@ void loop()
   if (onoffSW) {
     digitalWrite(INDICATOR, LOW); //signal the end of the calibration period
     sensorValue = analogRead(DELAYPOT); //read the sensor
-    sensorValue = map(sensorValue, sensorMin, sensorMax, 0, 5000);   //apply the calibration to the sensor reading
-    sensorValue = constrain(sensorValue, 0, 5000); //in case the sensor value is outside the range seen during calibration
-    lightSpeed = sensorValue;
+    lightSpeed = map(sensorValue, sensorMin, sensorMax, 0, 5000);   //apply the calibration to the sensor reading
+    lightSpeed = constrain(lightSpeed, 0, 5000); //in case the sensor value is outside the range seen during calibration
 
     if (curMillis - prevMillisLED > ledSpeed) {
       prevMillisLED = curMillis;   
@@ -77,6 +76,8 @@ void loop()
       Serial.print(sensorMax);
       Serial.print("\t");
       Serial.println(sensorValue);
+      Serial.print("\t");
+      Serial.println(lightSpeed);
     }
   } else {
     digitalWrite(INDICATOR, HIGH);
