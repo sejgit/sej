@@ -13,9 +13,12 @@ const int ONOFF = 2; // ON/OFF switch
 const int DELAYPOT = 0; //the speed potentiometer
 const int LED1 = 9; //red led
 const int LED2 = 10; //green led
-const int LIGHTS = 12;  //the christmas lights
+const int LIGHTS1 = 12;  //the christmas lights
+const int LIGHTS2 = 11; //the other christmas lights
 const int BAUD = 9600; //serial port baud
 const int INDICATOR = 13; //calibration indicator
+const int SCALEMIN = 50;
+const int SCALEMAX = 4000;
 
 int brightness = 0; //starting brightness
 int fadeAmount = 1; //how many points to fade the LEDs by
@@ -27,7 +30,7 @@ unsigned long prevMillisLED = 0; //will store last time LED was updated
 unsigned long prevMillisLight = 0; //will store last time Light was updated
 unsigned long curMillis = 0;
 unsigned long lightSpeed = 1000; //interval at which to blink (milliseconds)
-unsigned long ledSpeed = 20;
+unsigned long ledSpeed = 10;
 
 int sensorMin = 1023; //minimum sensor value
 int sensorMax = 10; //maximum sensor value
@@ -37,7 +40,8 @@ int sensorValue = 10; //the sensor value
 void setup()
 {
   pinMode(ONOFF, INPUT);
-  pinMode(LIGHTS, OUTPUT);
+  pinMode(LIGHTS1, OUTPUT);
+  pinMode(LIGHTS2, OUTPUT);
   pinMode(LED1, OUTPUT);
   pinMode(LED2, OUTPUT);
   pinMode(INDICATOR, OUTPUT);
@@ -51,12 +55,14 @@ void loop()
   curMillis = millis();
   onoffSW = digitalRead(ONOFF);
   
-  //  delay(10);
+
   if (onoffSW) {
     digitalWrite(INDICATOR, LOW); //signal the end of the calibration period
     sensorValue = analogRead(DELAYPOT); //read the sensor
-    lightSpeed = map(sensorValue, sensorMin, sensorMax, 0, 5000);   //apply the calibration to the sensor reading
-    lightSpeed = constrain(lightSpeed, 0, 5000); //in case the sensor value is outside the range seen during calibration
+    lightSpeed = map(sensorValue, sensorMin, sensorMax, SCALEMIN, SCALEMAX);   //apply the calibration to the sensor reading
+    lightSpeed = constrain(lightSpeed, SCALEMIN, SCALEMAX); //in case the sensor value is outside the range during calibration
+
+    ledSpeed = lightSpeed / 100;
 
     if (curMillis - prevMillisLED > ledSpeed) {
       prevMillisLED = curMillis;   
@@ -71,8 +77,10 @@ void loop()
 
     if (curMillis - prevMillisLight > lightSpeed) {
       prevMillisLight = curMillis;   
+      digitalWrite(LIGHTS1, mode);
       mode = !mode;
-      digitalWrite(LIGHTS, mode);
+      digitalWrite(LIGHTS2, mode);
+
       Serial.print(mode);
       Serial.print("\t");
       Serial.print(brightness);
@@ -81,7 +89,7 @@ void loop()
       Serial.print("\t");
       Serial.print(sensorMax);
       Serial.print("\t");
-      Serial.println(sensorValue);
+      Serial.print(sensorValue);
       Serial.print("\t");
       Serial.println(lightSpeed);
     }
@@ -89,7 +97,8 @@ void loop()
     digitalWrite(INDICATOR, HIGH);
     analogWrite(LED1, 0);
     analogWrite(LED2, 0);
-    digitalWrite(LIGHTS, LOW);
+    digitalWrite(LIGHTS1, LOW);
+    digitalWrite(LIGHTS2, LOW);
     calibrate(); 
   }
 
