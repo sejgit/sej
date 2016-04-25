@@ -1,0 +1,63 @@
+/*
+Running four wheels with transisters
+Thomas & Dad
+2016 04 07
+*/
+ 
+ 
+int fd = 3;  /* front driver */
+int fp = 9;  /* front passenger */ 
+int rd = 10;  /* rear driver */
+int rp = 11;  /* rear passenger */
+int fd_corr=0; /* correction factors */
+int fp_corr=0;
+int rd_corr=0;
+int rp_corr=0;
+int cur_speed=150;
+int new_speed=0;
+int old_speed=speed;
+const int led=13;
+int ledState=LOW;
+long previousMillis=0;
+long interval=1000;
+
+void setup() 
+{ 
+  pinMode(led, OUTPUT);
+  pinMode(fd, OUTPUT);
+  pinMode(fp, OUTPUT);
+  pinMode(rd, OUTPUT);
+  pinMode(rp, OUTPUT);
+  Serial.begin(9600);
+  while (! Serial);
+  Serial.println("Speed 0 to 255");
+  analogWrite(fd, cur_speed+fd_corr);
+  analogWrite(fp, cur_speed+fp_corr);
+  analogWrite(rd, cur_speed+rd_corr);
+  analogWrite(rp, cur_speed+rd_corr);
+} 
+ 
+ 
+void loop() 
+{ 
+  if (Serial.available())
+  {
+    speed = Serial.parseInt();
+    if (speed >= 0 && speed <= 255)
+    {
+      
+    }
+  }
+  if (speed1 != speed)
+  {
+    Serial.print("Speed = '");
+    Serial.print(speed);
+    Serial.println("'");
+    speed1 = speed;
+        analogWrite(fd, speed+fd_corr);
+        analogWrite(fp, speed+fp_corr);
+        analogWrite(rd, speed+rd_corr);
+        analogWrite(rp, speed+rd_corr); 
+      }
+
+} 
