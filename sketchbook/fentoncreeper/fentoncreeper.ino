@@ -5,7 +5,7 @@
 
 char* Instructions[]={
   "Keyboard Controls:",
-  "binary status B0000   left [on/off dir(+/-)] right [on/off dir(+/-)]",
+  "binary status B0000   on/off[left/right] dir(+/-)[left/right]",
   " y - speed: more",
   " n - speed: less",
   " . - stop (speed & dif zero)",
@@ -16,15 +16,7 @@ char* Instructions[]={
   " j - left soft (idle left side / drive right)",
   " k - right soft (idle right side / drive left)",
   " l - right hard (left / right drive)",
-  "  ";
-  " (left motors)",
-  " 1 -Motor 1 Left",
-  " 2 -Motor 1 Stop",
-  " 3 -Motor 1 Right",
-  " (right motors)",
-  " 4 -Motor 2 Left",
-  " 5 -Motor 2 Stop",
-  " 6 -Motor 2 Right",
+  "  "
 };
 
 
@@ -47,8 +39,8 @@ void setup() {  // Setup runs once per reset
 
   // initialize serial communication @ 9600 baud:
   Serial.begin(9600);
-  Serial.write();
-  for (int i = 0; i < 21; i++){
+  Serial.write(0);
+  for (int i = 0; i < 13; i++){
      Serial.println(Instructions[i]);
      delay(10);
    }
@@ -64,17 +56,20 @@ void setup() {  // Setup runs once per reset
 
 }
 
-void loop(int speed = 0, int dif = 0, int status = B000 ) {
+//void loop(int speed = 0, int dif = 0, int status = B000, int newstatus = B000) {
+void loop(){
+  static int speed = 0;
+  static int dif = 0;
+  static int status = B000;
+  static int newstatus = B000;
 
-  // Initialize the Serial interface:
+  status = drive(speed, dif, newstatus);
 
   if (Serial.available() > 0) {
-
     int inByte = Serial.read();
     newstatus = status;
 
     switch (inByte) {
-
       case 'y': // speed++
 	speed += incr;
         break;
@@ -158,20 +153,30 @@ void loop(int speed = 0, int dif = 0, int status = B000 ) {
 	dif = 0;
 	newstatus = B0000;
     }
-    status = drive(speed, dif, newstatus);
   }
 }
 
 
-int drive(int left, int right, int speed, int left, int right, int dif ) {
+int drive(int speed, int dif, int newstatus ) {
+
   if (speed > 255) speed = 255;
   if (speed < 0 ) speed = 0;
-  
-  if ((speed + dif) > 255) left = 255 - dif;
-  if ((speed + dif) < 0)
-  string out = left right speed;
+  if (dif > 255) dif = 255;
 
-  Serial.println(out);
+  if ((speed + dif) > 255) speed = 255 - dif;
+  if ((speed + dif) < 0)
+
+  analogWrite(speedPinA, 0);
+  digitalWrite(dir1PinA, LOW);
+  digitalWrite(dir2PinA, HIGH);
+  analogWrite(speedPinB, 0);
+  digitalWrite(dir1PinB, LOW);
+  digitalWrite(dir2PinB, HIGH);
+
+
+
+  //  string out = left right speed;
+  Serial.println();
   Serial.println("   "); // Creates a blank line printed on the serial monitor
 
   }
