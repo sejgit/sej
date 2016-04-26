@@ -56,7 +56,7 @@ void setup() {  // Setup runs once per reset
 
 }
 
-//void loop(int speed = 0, int dif = 0, int status = B000, int newstatus = B000) {
+
 void loop(){
   static int speed = 0;
   static int dif = 0;
@@ -64,10 +64,11 @@ void loop(){
   static int newstatus = B000;
 
   status = drive(speed, dif, newstatus);
+  newstatus = status;
 
+  
   if (Serial.available() > 0) {
     int inByte = Serial.read();
-    newstatus = status;
 
     switch (inByte) {
       case 'y': // speed++
@@ -78,17 +79,17 @@ void loop(){
         speed -= incr;
         break;
 
-      case '.': // speed=0
-        if ( (status & B1100) != 0) {
+      case '.': // first disengage then set speed=0
+        if ( (status & B1100) != 0) { // if left or right are on then disengage both
           newstatus = status & B0011;
 	}
-	else {
+	else { // else turn speed off
 	  speed = 0;
 	  dif = 0;
 	}
         break;
 
-      case ',': // dif=0
+      case ',': // go straight by turning dif=0
         dif = 0;
         break;
 
