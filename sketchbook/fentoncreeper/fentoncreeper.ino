@@ -2,6 +2,12 @@
 // arduino uno based four wheel drive robot
 // tsj sej 2016 04 25
 
+//todo:
+// hard / soft turns
+// change speed to +255 to -255 then write pins high low based on =/-
+// write output to console
+// raspberry pi output/control
+
 
 char* Instructions[]={
   "Keyboard Controls:",
@@ -60,8 +66,8 @@ void setup() {  // Setup runs once per reset
 void loop(){
   static int speed = 0;
   static int dif = 0;
-  static int status = B000;
-  static int newstatus = B000;
+  static int status = B0000;
+  static int newstatus = B0000;
 
   status = drive(speed, dif, newstatus);
   newstatus = status;
@@ -158,7 +164,12 @@ void loop(){
 }
 
 
+// still lots of work here!!!
 int drive(int speed, int dif, int newstatus ) {
+  int Aon = newstatus & B1000;
+  int Bon = newstatus & B0100;
+  int dirA = newstatus & B0010;
+  int dirB = newstatus & B0001;
 
   if (speed > 255) speed = 255;
   if (speed < 0 ) speed = 0;
@@ -167,10 +178,11 @@ int drive(int speed, int dif, int newstatus ) {
   if ((speed + dif) > 255) speed = 255 - dif;
   if ((speed + dif) < 0)
 
-  analogWrite(speedPinA, 0);
+  analogWrite(speedPinA, speed);
+
   digitalWrite(dir1PinA, LOW);
   digitalWrite(dir2PinA, HIGH);
-  analogWrite(speedPinB, 0);
+  analogWrite(speedPinB, (speed+dif));
   digitalWrite(dir1PinB, LOW);
   digitalWrite(dir2PinB, HIGH);
 
