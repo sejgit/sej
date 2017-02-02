@@ -1,0 +1,3 @@
+[submodule "prowlpy"]
+	path = prowlpy
+	url = https://github.com/jacobb/prowlpy
