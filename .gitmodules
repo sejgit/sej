@@ -1,0 +1,9 @@
+[submodule "prowlpy"]
+	path = prowlpy
+	url = https://github.com/jacobb/prowlpy
+[submodule "letsencrypt"]
+        path = letsencrypt
+        url = https://github.com/letsencrypt/letsencrypt
+[submodule "RPi_Cam_Web_Interface"]
+        path = RPi_Cam_Web_Interface
+        url = https://github.com/silvanmelchior/RPi_Cam_Web_Interface
