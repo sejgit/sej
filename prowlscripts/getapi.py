@@ -24,5 +24,6 @@ print "I got token %s for %s" % (response['token'], response['url'])
 # retrieve his/her api_key
 raw_input("Press Enter to continue...")
 users_api_key = p.retrieve_apikey(provider_key, response["token"])
-print "users api key is:"
-print users_api_key
+print "users api key is: %s" % (users_api_key['apikey'])
+
+print "Done."
