@@ -16,7 +16,7 @@ tilt = 0
 
 # offsets
 poff = 0
-toff = 5
+toff = 10
 
 
 pantilthat.pan(pan + poff)
