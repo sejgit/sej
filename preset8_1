@@ -2,7 +2,7 @@
 # preset1_1
 
 # preset for pan tilt module for use in motioneye
-# preset#1 home
+# preset#1 mid_minor_right
 
 
 # 2017 03 15 SeJ init
@@ -11,8 +11,8 @@
 import pantilthat
 
 # pantilt settings
-pan = 0
-tilt = 0
+pan = -20
+tilt = 30
 
 # offsets
 poff = 0
