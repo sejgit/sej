@@ -11,7 +11,7 @@
 import pantilthat
 
 # pantilt settings
-pan = -45
+pan = 45
 tilt = 0
 
 # offsets
