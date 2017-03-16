@@ -13,8 +13,8 @@ pan = 20
 tilt = 30
 
 # offsets
-poff = 20
-toff = 30
+poff = 15
+toff = 5
 
 
 pantilthat.pan(pan + poff)

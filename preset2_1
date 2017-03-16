@@ -10,11 +10,11 @@ import pantilthat
 
 # pantilt settings
 pan = 20
-tilt = 0
+tilt = 7
 
 # offsets
-poff = 20
-toff = 30
+poff = 15
+toff = 5
 
 
 pantilthat.pan(pan + poff)
