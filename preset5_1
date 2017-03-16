@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+# preset1_1
+
+# preset for pan tilt module for use in motioneye
+# preset#1 home
+
+
+# 2017 03 15 SeJ init
+
+### imports
+import pantilthat
+
+# pantilt settings
+pan = 0
+tilt = 0
+
+# offsets
+poff = 0
+toff = 15
+
+
+pantilthat.pan(pan + poff)
+pantilthat.tilt(tilt + toff)
+
