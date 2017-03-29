@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # preset6_1
-
+# preset#6 low_mid_left
 # preset for pan tilt module for use in motioneye
-# preset#1 mid_left
-
 
 # 2017 03 15 SeJ init
 
@@ -11,12 +9,12 @@
 import pantilthat
 
 # pantilt settings
-pan = 45
+pan = 20
 tilt = 30
 
 # offsets
-poff = 0
-toff = 15
+poff = 15
+toff = 5
 
 
 pantilthat.pan(pan + poff)
