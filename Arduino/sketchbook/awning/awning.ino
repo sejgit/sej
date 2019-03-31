@@ -1,8 +1,8 @@
 /*********
           Awning control & Living room temperature
 
-          init SeJ 03 09 2019 specifics to my application
-          update SeJ tbd
+          init   SeJ 03 09 2019 specifics to my application
+          update SeJ 03 24 2019 change to relay
 *********/
 
 #include <../../../../../../../../../Projects/keys/sej/sej.h>
@@ -42,6 +42,12 @@ long getisyInterval = 120000;
 long resetwifiInterval = 60000;
 long awningcontrolInterval = 30000;
 int control = true;
+int awningpushtime = 2000;
+
+// pins
+int pbpower = 0; // Pin D2 GPIO 0
+int pbbutton = 4; // Pin D3 GPIO 4
+int relaypower = 2; // Pin D4 GPIO 2
 
 /*
  * Setup
@@ -58,13 +64,18 @@ void setup(){
   control = true;
 
   // prepare GPIO4
-  pinMode(4, OUTPUT);
-  digitalWrite(4, false);
+  pinMode(pbpower, OUTPUT);
+  digitalWrite(pbpower, HIGH);
+  delay(1);
+  pinMode(pbbutton, OUTPUT);
+  digitalWrite(pbbutton, HIGH);
+  delay(1);
+  pinMode(relaypower, OUTPUT);
+  digitalWrite(relaypower, LOW);
 }
 
 void loop(){
   int val;
-
   unsigned long currentMillis = millis();
 /*
  * Temperature retrieve from DS18B20
@@ -116,7 +127,7 @@ if(WiFi.status() == WL_CONNECTED) {
   if (client) {
     Serial.println("New client");
 
-    if (client.available()) {
+    if (true) {
       // Read the first line of the request
       String s = client.readStringUntil('\r');
       Serial.println(s);
@@ -131,10 +142,14 @@ if(WiFi.status() == WL_CONNECTED) {
         val = true;
         Serial.println("request awning control");
         if(control == true){
-          digitalWrite(4, true);
+          digitalWrite(relaypower, HIGH);
+          digitalWrite(pbpower, LOW);
+          digitalWrite(pbbutton, LOW);
           Serial.println("**awning button pushed**");
-          delay(500);
-          digitalWrite(4, false);
+          delay(awningpushtime);
+          digitalWrite(pbbutton, HIGH);
+          digitalWrite(pbpower, HIGH);
+          digitalWrite(relaypower, LOW);
           Serial.println("**awning button released**");
           awningcontrolMillis = currentMillis;
           control = false;
@@ -146,23 +161,24 @@ if(WiFi.status() == WL_CONNECTED) {
        */
       if(val){
         // Prepare the response
-      s = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>\r\nAwning control is now ";
-      s += (control) ? "true" : "false";
-      s += " --- Temperature: ";
-      s += temperatureCString;
-      s += "C  ";
-      s += temperatureFString;
-      s += "F  ---";
-      s += "</html>\n";
+        s = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>\r\nAwning control is now ";
+        s += (control) ? "true" : "false";
+        s += " --- Temperature: ";
+        s += temperatureCString;
+        s += "C  ";
+        s += temperatureFString;
+        s += "F  ---";
+        s += "</html>\n";
 
-      // Send the response to the client
-      delay(1);
-      client.print(s);
-      val = false;
+        // Send the response to the client
+        delay(1);
+        client.print(s);
+        val = false;
       }
 
       delay(1);
       client.flush();
+      client.stop();
       Serial.println("Client disconnected");
 
     }
