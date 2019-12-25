@@ -2,6 +2,4 @@ sej
 ===
 
 General stuff
-on my RPi
-to share with thomas
-
+Just used as a playground ; not for permanent projects
