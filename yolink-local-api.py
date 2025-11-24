@@ -7,7 +7,7 @@ import requests
 import logging
 import json
 
-LOGGER = logging.getLogger(__name__)
+LOGGER = logging
 
 class Yolink:
     def __init__(self, data):
@@ -25,11 +25,12 @@ class Yolink:
                 timeout=10)
             if response.ok:
                 self.access_key = response.json()
-                LOGGER.debug('Local yoAccess Token : {}'.format(self.access_key))
+                logging.debug('Local yoAccess Token : {}'.format(self.access_key))
         except Exception as err:
             LOGGER.error(f"other error: {err}")
 
 if __name__ == "__main__":
+    LOGGER.basicConfig(level=logging.DEBUG)
     try:
         with open(os.path.expanduser("~/.ssh/yolink-local-api.json"), "r") as jsonfile:
             data = json.load(jsonfile)
